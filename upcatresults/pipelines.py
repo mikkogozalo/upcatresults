@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# Define your item pipelines here
-#
-# Don't forget to add your pipeline to the ITEM_PIPELINES setting
-# See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
+from scrapy.exceptions import DropItem
+
+from upcatresults.items import PasserItem
 
 
-class UpcatresultsPipeline(object):
+class NamePipeline(object):
     def process_item(self, item, spider):
+        if isinstance(item, PasserItem):
+            if not 'name' in item:
+                raise DropItem('No name was extracted')
+            if not isinstance(item['name'], basestring):
+                return None
+            name = item['name'].split(', ')
+            if len(name) == 2:
+                item['name_first'] = name[1]
+                item['name_last'] = name[0]
         return item
