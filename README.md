@@ -1,2 +1,2 @@
-# upcatresults
-Crawler for UPCAT Results
+# UPCAT Results Crawler
+Implemented using Scrapy.
