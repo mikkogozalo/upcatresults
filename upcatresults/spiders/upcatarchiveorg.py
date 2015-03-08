@@ -7,11 +7,11 @@ from scrapy.http import Request
 from upcatresults.items import PasserItemLoader
 
 
-class Upcat2015Spider(Spider):
-    name = "upcat2015"
-    allowed_domains = ["upcat.up.edu.ph"]
+class Upcat2014Spider(Spider):
+    name = "upcat2014"
+    allowed_domains = ["web.archive.org"]
     start_urls = (
-        'http://upcat.up.edu.ph/results/',
+        'http://web.archive.org/web/20140625204215/http://upcat.up.edu.ph/results/',
     )
 
     def parse(self, response):
@@ -20,12 +20,12 @@ class Upcat2015Spider(Spider):
             yield Request(urljoin(response.url, page), self.parse_page)
 
     def parse_page(self, response):
-        passers = response.xpath('//table//tr[count(./td)=3]')
+        passers = response.xpath('//table//tr[count(./td)=4]')
         for passer in passers:
             pil = PasserItemLoader(selector=passer)
-            pil.add_xpath('name', './td[1]/text()')
-            pil.add_xpath('campus', './td[2]/text()')
-            pil.add_xpath('course', './td[3]/text()')
+            pil.add_xpath('student_number', './td[1]/text()')
+            pil.add_xpath('name', './td[2]/text()')
+            pil.add_xpath('campus', './td[3]/text()')
+            pil.add_xpath('course', './td[4]/text()')
             pil.add_value('source', response.url)
-            pil.add_value('year', '2015')
             yield pil.load_item()
